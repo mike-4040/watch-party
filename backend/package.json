@@ -5,7 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/app.js"
+    "start": "tsc && node dist/app.js",
+    "pg:up": "docker compose -f docker-compose.local-postgres.yml up -d",
+    "pg:stop": "docker compose -f docker-compose.local-postgres.yml stop",
+    "pg:connect": "docker exec -it watch_party_pg /bin/bash"
   },
   "author": "Mike Kravtsov",
   "license": "ISC",
