@@ -4,6 +4,11 @@
 
 Completely independent `./backend/` and `./client/` folders for the backend and frontend.
 
+## Prerequisite
+
+- nodejs, `nvm` with [Deep Shell Integration](https://github.com/nvm-sh/nvm#deeper-shell-integration) is strongly recommended
+- docker
+
 ## Database
 
 Postgres in container.
