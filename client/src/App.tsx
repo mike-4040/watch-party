@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import { checkApiHealth } from './utils/checkApiHealth';
+import { checkWsConnection } from './utils/checkWsConnection';
 import CreateSession from './routes/CreateSession';
 import ReplaySession from './routes/ReplaySession';
 import { THEME } from './config';
@@ -13,6 +14,7 @@ const darkTheme = createTheme(THEME);
 const App = () => {
   useEffect(() => {
     checkApiHealth();
+    checkWsConnection();
   }, []);
 
   return (
