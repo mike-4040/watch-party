@@ -53,3 +53,11 @@ TBD
 cd backend
 npm run pg:stop
 ```
+
+## Starting the backend
+
+In `./backend/` folder
+
+- `npm start` to start the backend in development mode
+- `npm run build` to build the backend
+- `npm run start:prod` to start the backend in production mode
