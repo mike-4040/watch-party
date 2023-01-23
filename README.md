@@ -9,6 +9,12 @@ Completely independent `./backend/` and `./client/` folders for the backend and 
 - nodejs, `nvm` with [Deep Shell Integration](https://github.com/nvm-sh/nvm#deeper-shell-integration) is strongly recommended
 - docker
 
+- env variables
+
+  - `cp .env.template .env`
+
+  - update `.env` with your own values
+
 ## Database
 
 Postgres in container.
@@ -28,7 +34,7 @@ cd backend
 npm run pg:up
 ```
 
-### Create a database (run only once)
+### Create a database (only once)
 
 ```bash
 cd backend
@@ -43,9 +49,20 @@ sh pg_scripts/init.sh
 exit
 ```
 
-### Run migration
+### Run migration (every time the database structure changes)
 
-TBD
+```bash
+cd backend
+
+# Connect to postgres container
+npm run pg:connect
+
+# In container shell
+sh /pg_scripts/migrate.sh
+
+# exit container
+exit
+```
 
 ### Stop Postgres
 

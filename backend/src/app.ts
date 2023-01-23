@@ -7,16 +7,25 @@ import {
   WS_DEFAULT_PORT,
   WS_PING_INTERVAL,
 } from './constants.js';
-import { health } from './middleware/health.js';
+import { auth } from './middleware/auth.js';
+import { errorHandler } from './middleware/errorHandler.js';
 import { handleConnection } from './websocket/handleConnection.js';
+import { health } from './middleware/health.js';
 import { pingAllWsClients } from './websocket/ping.js';
+import { postSession } from './sessions/postSession.js';
+import { postUser } from './users/controllers.js';
 
 // http server
 const port = process.env.PORT || DEFAULT_PORT;
 
 express()
   .use(cors())
+  .use(express.json())
   .get('/health', health)
+  .post('/users', postUser)
+  .use(auth) // all routes below this line require auth
+  .post('/sessions', postSession)
+  .use(errorHandler)
   .listen(port, () => console.log(`Listening on http://localhost:${port}`));
 
 // websocket server
