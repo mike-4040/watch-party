@@ -9,6 +9,7 @@ import {
 } from './constants.js';
 import { auth } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { getSession } from './sessions/getSession.js';
 import { handleConnection } from './websocket/handleConnection.js';
 import { health } from './middleware/health.js';
 import { pingAllWsClients } from './websocket/ping.js';
@@ -25,6 +26,7 @@ express()
   .post('/users', postUser)
   .use(auth) // all routes below this line require auth
   .post('/sessions', postSession)
+  .get('/sessions/:sessionId', getSession)
   .use(errorHandler)
   .listen(port, () => console.log(`Listening on http://localhost:${port}`));
 

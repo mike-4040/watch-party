@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { post } from '../services/http';
+import type { PropsUser } from '../types';
 
-const CreateSession: React.FC<{ userId: number | null }> = props => {
+const CreateSession: React.FC<PropsUser> = props => {
   const { userId } = props;
   const navigate = useNavigate();
   const [newUrl, setNewUrl] = useState('');

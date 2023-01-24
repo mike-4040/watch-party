@@ -17,11 +17,9 @@ const App = () => {
 
   useEffect(() => {
     checkApiHealth();
-    async function fetchUserId() {
-      const userId = await getUser();
-      setUserId(userId);
-    }
-    fetchUserId();
+
+    getUser().then(setUserId);
+
     checkWsConnection();
   }, []);
 
@@ -40,7 +38,10 @@ const App = () => {
         <Routes>
           <Route path='/' element={<CreateSession userId={userId} />} />
           <Route path='/create' element={<CreateSession userId={userId} />} />
-          <Route path='/watch/:sessionId' element={<WatchSession />} />
+          <Route
+            path='/watch/:sessionId'
+            element={<WatchSession userId={userId} />}
+          />
           <Route path='/replay/:sessionId' element={<ReplaySession />} />
         </Routes>
       </Box>
