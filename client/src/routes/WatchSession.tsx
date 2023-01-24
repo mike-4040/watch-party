@@ -1,39 +1,49 @@
-import { useEffect, useState } from "react";
-import VideoPlayer from "../components/VideoPlayer";
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, Button, TextField, Tooltip } from "@mui/material";
-import LinkIcon from "@mui/icons-material/Link";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Box, Button, TextField, Tooltip } from '@mui/material';
+import LinkIcon from '@mui/icons-material/Link';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 
-const WatchSession: React.FC = () => {
+import { getSession } from '../utils/getSession';
+import type { PropsUser } from '../types';
+import VideoPlayer from '../components/VideoPlayer';
+
+const WatchSession: React.FC<PropsUser> = props => {
   const { sessionId } = useParams();
+  const { userId } = props;
+
   const navigate = useNavigate();
   const [url, setUrl] = useState<string | null>(null);
 
   const [linkCopied, setLinkCopied] = useState(false);
 
   useEffect(() => {
-    // load video by session ID -- right now we just hardcode a constant video but you should be able to load the video associated with the session
-    setUrl("https://www.youtube.com/watch?v=NX1eKLReSpY");
+    getSession(userId, sessionId as string).then(session => {
+      const url = session?.url;
 
-    // if session ID doesn't exist, you'll probably want to redirect back to the home / create session page
-  }, [sessionId]);
+      if (url) {
+        setUrl(url);
+      } else {
+        navigate('/create');
+      }
+    });
+  }, [navigate, sessionId, userId]);
 
   if (!!url) {
     return (
       <>
         <Box
-          width="100%"
+          width='100%'
           maxWidth={1000}
-          display="flex"
+          display='flex'
           gap={1}
           marginTop={1}
-          alignItems="center"
+          alignItems='center'
         >
           <TextField
-            label="Youtube URL"
-            variant="outlined"
+            label='Youtube URL'
+            variant='outlined'
             value={url}
             inputProps={{
               readOnly: true,
@@ -41,7 +51,7 @@ const WatchSession: React.FC = () => {
             }}
             fullWidth
           />
-          <Tooltip title={linkCopied ? "Link copied" : "Copy link to share"}>
+          <Tooltip title={linkCopied ? 'Link copied' : 'Copy link to share'}>
             <Button
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
@@ -49,30 +59,30 @@ const WatchSession: React.FC = () => {
                 setTimeout(() => setLinkCopied(false), 2000);
               }}
               disabled={linkCopied}
-              variant="contained"
-              sx={{ whiteSpace: "nowrap", minWidth: "max-content" }}
+              variant='contained'
+              sx={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
             >
               <LinkIcon />
             </Button>
           </Tooltip>
-          <Tooltip title="Replay this watch party">
+          <Tooltip title='Replay this watch party'>
             <Button
               onClick={() => {
-                window.open(`/replay/${sessionId}`, "_blank");
+                window.open(`/replay/${sessionId}`, '_blank');
               }}
-              variant="contained"
-              sx={{ whiteSpace: "nowrap", minWidth: "max-content" }}
+              variant='contained'
+              sx={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
             >
               <VideoLibraryIcon />
             </Button>
           </Tooltip>
-          <Tooltip title="Create new watch party">
+          <Tooltip title='Create new watch party'>
             <Button
               onClick={() => {
-                navigate("/create");
+                navigate('/create');
               }}
-              variant="contained"
-              sx={{ whiteSpace: "nowrap", minWidth: "max-content" }}
+              variant='contained'
+              sx={{ whiteSpace: 'nowrap', minWidth: 'max-content' }}
             >
               <AddCircleOutlineIcon />
             </Button>

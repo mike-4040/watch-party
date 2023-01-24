@@ -18,12 +18,19 @@ const http = axios.create({
 //   console.error('http service error:', error);
 // });
 
-export function get(path: string) {
+export function get(userId: number, path: string) {
+  if (!userId) {
+    throw new Error('GET: Missing userId.');
+  }
+
+  return http.get(path, { headers: { Authorization: userId } });
+}
+
+export function getUnAuth(path: string) {
   return http.get(path);
 }
 
 export function post(userId: number, path: string, data: any) {
-  
   if (!userId) {
     throw new Error('Missing userId.');
   }

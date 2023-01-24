@@ -25,3 +25,22 @@ export async function createSession(
 
   return objectToCamelCase<Session>(session);
 }
+
+export async function querySessionById(session_id: string) {
+  const query = `
+    SELECT *
+    FROM sessions
+    WHERE session_id = $1 `;
+
+  const params = [session_id];
+
+  const { rows } = await pgClient.query(query, params);
+
+  if (!rows?.length) {
+    return null;
+  }
+
+  const [session] = rows;
+
+  return objectToCamelCase<Session>(session);
+}

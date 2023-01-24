@@ -1,5 +1,6 @@
 import { postUnAuth } from '../services/http';
 
+/** don't throw error, just return null */
 export async function getUser() {
   try {
     const storedUserId = localStorage.getItem('userId');
@@ -8,9 +9,9 @@ export async function getUser() {
     if (Number.isInteger(userId)) {
       return userId;
     }
-    const { data } = (await postUnAuth('/users', {})) || {};
+    const { data = {} } = (await postUnAuth('/users', {})) || {};
 
-    ({ userId } = data || {});
+    ({ userId } = data);
     if (!userId) {
       throw new Error(`Can't get userId.`);
     }
