@@ -6,12 +6,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 
 import { getSession } from '../utils/getSession';
-import type { PropsUser } from '../types';
+import type { PropsUserPlay } from '../types';
 import VideoPlayer from '../components/VideoPlayer';
 
-const WatchSession: React.FC<PropsUser> = props => {
+const WatchSession: React.FC<PropsUserPlay> = ({ userId, wsConnId, isPlaying }) => {
   const { sessionId } = useParams();
-  const { userId } = props;
 
   const navigate = useNavigate();
   const [url, setUrl] = useState<string | null>(null);
@@ -88,7 +87,14 @@ const WatchSession: React.FC<PropsUser> = props => {
             </Button>
           </Tooltip>
         </Box>
-        <VideoPlayer url={url} />;
+        <VideoPlayer
+          url={url}
+          sessionId={sessionId}
+          userId={userId}
+          wsConnId={wsConnId}
+          isPlaying={isPlaying}
+        />
+        ;
       </>
     );
   }

@@ -17,3 +17,14 @@ CREATE TABLE IF NOT EXISTS public.sessions (
   user_id INTEGER,
   url TEXT
 );
+
+-- DROP TABLE IF EXISTS public.events;
+CREATE TABLE IF NOT EXISTS public.events (
+  event_id serial PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  position_seconds REAL NOT NULL,
+  timestamp BIGINT NOT NULL,
+  ws_conn_id TEXT
+);

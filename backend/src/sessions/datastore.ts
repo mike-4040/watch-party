@@ -1,6 +1,6 @@
 import { pgClient } from '../database/pgClient.js';
 import { objectToCamelCase } from '../database/utils.js';
-import { Session } from './types.js';
+import type { Session, SessionState } from './types.js';
 
 export async function createSession(
   user_id: number,
@@ -27,12 +27,21 @@ export async function createSession(
 }
 
 export async function querySessionById(session_id: string) {
+  const excludedEvents = ['joined'];
   const query = `
-    SELECT *
-    FROM sessions
-    WHERE session_id = $1 `;
+    SELECT s.session_id, s.url, e.user_id, e.type, e.position_seconds
+    FROM sessions AS s
+	    LEFT JOIN events AS e
+		    ON e.session_id = s.session_id
+    WHERE
+      s.session_id = $1
+      AND ( e.type NOT IN ( $2)
+            OR e.type IS NULL
+      )
+    ORDER BY timestamp DESC
+    LIMIT 1 `;
 
-  const params = [session_id];
+  const params = [session_id, excludedEvents];
 
   const { rows } = await pgClient.query(query, params);
 
@@ -42,5 +51,5 @@ export async function querySessionById(session_id: string) {
 
   const [session] = rows;
 
-  return objectToCamelCase<Session>(session);
+  return objectToCamelCase<SessionState>(session);
 }
