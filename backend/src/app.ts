@@ -13,6 +13,7 @@ import { getSession } from './sessions/getSession.js';
 import { handleConnection } from './websocket/handleConnection.js';
 import { health } from './middleware/health.js';
 import { pingAllWsClients } from './websocket/ping.js';
+import { postEvent } from './events/postEvent.js';
 import { postSession } from './sessions/postSession.js';
 import { postUser } from './users/controllers.js';
 
@@ -27,6 +28,7 @@ express()
   .use(auth) // all routes below this line require auth
   .post('/sessions', postSession)
   .get('/sessions/:sessionId', getSession)
+  .post('/events', postEvent)
   .use(errorHandler)
   .listen(port, () => console.log(`Listening on http://localhost:${port}`));
 
@@ -35,10 +37,10 @@ const wsPort = parseInt(process.env.WS_PORT || '0') || WS_DEFAULT_PORT;
 
 let pingInterval: NodeJS.Timeout;
 
-const wss = new WebSocketServer({ port: wsPort }, () =>
+export const { clients } = new WebSocketServer({ port: wsPort }, () =>
   console.log('WS server up')
 )
   .on('connection', handleConnection)
   .on('close', () => clearInterval(pingInterval));
 
-pingInterval = setInterval(pingAllWsClients, WS_PING_INTERVAL, wss.clients);
+pingInterval = setInterval(pingAllWsClients, WS_PING_INTERVAL, clients);

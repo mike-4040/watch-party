@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 
-
 export function handleConnection(ws: WebSocket) {
   console.log('Websocket connected');
+  const wsConnId = randomUUID();
 
   Object.assign(ws, {
     isAlive: true,
-    id: randomUUID(),
+    id: wsConnId,
   });
 
   ws.on('message', function message(this, data) {
@@ -20,5 +20,5 @@ export function handleConnection(ws: WebSocket) {
     }
   });
 
-  ws.send('ws connected');
+  ws.send(JSON.stringify({ wsConnId }));
 }

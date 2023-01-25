@@ -3,24 +3,26 @@ import { Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import { checkApiHealth } from './utils/checkApiHealth';
-import { checkWsConnection } from './utils/checkWsConnection';
 import CreateSession from './routes/CreateSession';
+import { getUser } from './utils/getUser';
 import ReplaySession from './routes/ReplaySession';
 import { THEME } from './config';
 import WatchSession from './routes/WatchSession';
-import { getUser } from './utils/getUser';
+import { wsClient } from './utils/wsClient';
 
 const darkTheme = createTheme(THEME);
 
 const App = () => {
   const [userId, setUserId] = useState<number | null>(null);
+  const [wsConnId, setWsConnId] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     checkApiHealth();
 
     getUser().then(setUserId);
 
-    checkWsConnection();
+    wsClient(setWsConnId, setIsPlaying);
   }, []);
 
   return (
@@ -36,13 +38,28 @@ const App = () => {
         gap={1}
       >
         <Routes>
-          <Route path='/' element={<CreateSession userId={userId} />} />
-          <Route path='/create' element={<CreateSession userId={userId} />} />
+          <Route
+            path='/'
+            element={<CreateSession userId={userId} wsConnId={wsConnId} />}
+          />
+          <Route
+            path='/create'
+            element={<CreateSession userId={userId} wsConnId={wsConnId} />}
+          />
           <Route
             path='/watch/:sessionId'
-            element={<WatchSession userId={userId} />}
+            element={
+              <WatchSession
+                userId={userId}
+                wsConnId={wsConnId}
+                isPlaying={isPlaying}
+              />
+            }
           />
-          <Route path='/replay/:sessionId' element={<ReplaySession />} />
+          <Route
+            path='/replay/:sessionId'
+            element={<ReplaySession userId={userId} wsConnId={wsConnId} />}
+          />
         </Routes>
       </Box>
     </ThemeProvider>

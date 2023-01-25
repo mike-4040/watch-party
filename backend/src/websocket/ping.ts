@@ -8,6 +8,7 @@ function ping(ws: WebSocket) {
     Object.getOwnPropertyDescriptor(ws, 'isAlive') || {};
 
   if (isAlive === false) {
+    // TODO: update db, unsubscribe from events
     ws.terminate();
     return;
   }
@@ -16,5 +17,5 @@ function ping(ws: WebSocket) {
     isAlive: false,
   });
 
-  ws.send('ping');
+  ws.send('{"ping":true}');
 }
